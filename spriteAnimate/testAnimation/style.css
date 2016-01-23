@@ -1,0 +1,27 @@
+p {
+	
+}
+#character {
+	  position: absolute;
+	  z-index:100;
+	  top: 0px;
+	  left: 0px;
+	  width: 32px;
+	  height: 48px;
+	  background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_front-stand.png') no-repeat;
+}
+#character.front-right {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_front-right.png') no-repeat;}
+#character.front-stand {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_front-stand2.png') no-repeat;}
+#character.front-left {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_front-left.png') no-repeat;}
+
+#character.left-right {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_left-right.png') no-repeat;}
+#character.left-stand {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_left-stand2.png') no-repeat;}
+#character.left-left {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_left-left.png') no-repeat;}
+
+#character.right-right {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_right-right.png') no-repeat;}
+#character.right-stand {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_right-stand.png') no-repeat;}
+#character.right-left {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_right-left.png') no-repeat;}
+
+#character.back-right {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_back-right.png') no-repeat;}
+#character.back-stand {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_back-stand.png') no-repeat;}
+#character.back-left {background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_back-left.png') no-repeat;}
