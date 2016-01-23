@@ -1,22 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
-  var trollButton = document.getElementById('trollbutton');
-  trollButton.addEventListener('click', function() {
-    var socket = io.connect('http://192.241.182.93:3000/');
-    var username = "eugene"
-    socket.emit('privmsg', {'to': username, 'msg':'hi'});
-    socket.emit('chat message', 'hi all')
-  });
 
   /* Update with your identity */
   var username = "evan";
 
-  /*** Stuff to do at the beginning ***/
-
   /* Get list of friends */
-  updateFriendList(); // no return method
+  var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username);
+  updateFriendList(friends);
 
   /* Add listener for button to troll everyone */
-  $('#troll_everyone').click(trollEveryone());
+  $('#troll_everyone').click(function () {
+    var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
+      username);
+    trollEveryone(friends);
+  });
+
 });
 
 function httpGet(theUrl) {
@@ -27,8 +25,7 @@ function httpGet(theUrl) {
 };
 
 function updateFriendList(friends) {
-  var parsedFriends = JSON.parse(httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username));
+	var parsedFriends = JSON.parse(friends);
 	var numOnlineFriends = 0;
 
   parsedFriends.forEach(function(friend) {
@@ -54,16 +51,14 @@ function updateFriendList(friends) {
 
 function friendTroll(target) {
   /* Send a signal to the server to troll a friend. */
-  alert("Trolling " + target);
+  alert("Trolling" + target);
 };
 
-function trollEveryone() {
-  /* get friends */
-  var parsedFriends = JSON.parse(httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username));
+function trollEveryone(friends) {
+  var parsedFriends = JSON.parse(friends)
   parsedFriends.forEach(function(friend) {
     if (friend["online"]) {
       friendTroll(friend["name"]);
     }
-  })
-}
+  });
+};
