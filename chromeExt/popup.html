@@ -1,23 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>Getting Started Extension's Popup</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-        width: 800px;
-        height: 1200px;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        width: 800px;
-        height: 1200px;
-      }
-    </style>
+    <title>Cyber Troll</title>
+
+    <!-- Optional theme -->
 
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
@@ -25,24 +11,37 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
+
+    <link rel="stylesheet" href="bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap-theme.min.css">
     <script src="jquery-2.2.0.min.js"></script>
+    <script src="bootstrap.min.js"></script>
     <script src="socket.io.js"></script>
     <script src="popup.js"></script>
-    <script src="background.js"></script>
   </head>
-  <body>
-    <!-- Section to add friends etc. -->
-    <input type="button" value="Add Friend" id="addfriendbutton" />
-    <div> My Name Here </div>
-    <input type="button" value="Online" id="onlinebutton" /> <!-- to be toggled on/off w/JS -->
-    <input type="button" value="Logout user" id="userbutton" />
+  <body style="width:250px">
+    <div class="container">
+      <!-- Section to add friends etc. -->
+      <div class="row"> 
+        <div class=".col-xs-8">
+          <h2>Evan</h2>
+        </div>
+        <div class=".col-xs-4">
+          <input type="button" value="Online" id="onlinebutton" /> <!-- to be toggled on/off w/JS -->
+        </div>
+      </div>
+      <div class="row">
+        <input type="button" value="Add Friend" id="addfriendbutton" />
+        <input type="button" value="Logout user" id="userbutton" />
+      </div>
 
-    <hr>
+      <hr>
 
-    Friends online right now: <span id="numOnlineFriends"></span>
-    <ul id="friendlist"></ul>
+      Friends online right now: <span id="numOnlineFriends"></span>
+      <ul id="friendlist"></ul>
 
-    <input type="button" value="Troll everyone!" id="troll_everyone" />
+      <input type="button" value="Troll everyone!" id="troll_everyone" />
+    </div>
   </body>
 </html>
 
