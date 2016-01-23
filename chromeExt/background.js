@@ -10,12 +10,12 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     code: 'document.body.style.backgroundColor="red"'
   });
   chrome.extension.getBackgroundPage().console.log('foo');
-  console.log(socket)
-  var socket = io.connect('http://192.241.182.93:3000/');
-  socket.emit('chat message', 'Hi from a Chrome Extension!');
-  socket.on('chat message', function(msg){
-    console.log(msg);
-  });
+});
+
+var socket = io.connect('http://192.241.182.93:3000/');
+//socket.emit('chat message', 'blue');
+socket.on('chat message', function(msg){
+  alert(msg);
 });
 
 
