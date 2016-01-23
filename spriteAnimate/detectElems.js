@@ -17,13 +17,35 @@ Object.size = function(obj) {
 };
 
 /* 
+ * Blast webpage; that is, enclose all characters in 
+ * their own span tags.
+ */
+
+function blastWebpage(){
+$("div")
+  // Blast the text apart by word.
+  .blast({ 
+    delimiter: "character", // Set the delimiter type (see left)
+    tag: "span", // Set the wrapping element type (e.g. "div")
+    display: "inline",
+    // position: "absolute"
+    });
+
+  $("p")
+  // Blast the text apart by word.
+  .blast({ 
+    delimiter: "character", // Set the delimiter type (see left)
+    tag: "span", // Set the wrapping element type (e.g. "div")
+    display: "inline",
+    // position: "absolute"
+    });
+}
+
+/* 
  * Finds and stores all boundary locations of elements 
  * on the page. To get the element corresponding to id, 
  * get all[id].
  */ 
-
-var all = document.getElementsByClassName("blast");
-var boundaries = {};
 
 function findElems() {
 	for (var i=0, max=all.length; i < max; i++) {
@@ -39,6 +61,18 @@ function findElems() {
 	}
 };
 
+function getPosition(element) {
+    var xPosition = 0;
+    var yPosition = 0;
+  
+    while(element) {
+        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+        element = element.offsetParent;
+    }
+    return { x: xPosition, y: yPosition };
+}
+
 /*
  * Determines whether an element should collide or not
  * depending on the sprite's location and direction. If
@@ -47,21 +81,89 @@ function findElems() {
  * @param sprite The sprite object
  */
 
- var delta = 10; // threshold: within 10px
+var delta = 6; // threshold: within 10px
+var sprite = document.getElementById("character");
+var all = document.getElementsByClassName("blast");
+var boundaries = {};
 
- function puntElem(id, sprite) {
- 	var dir = sprite.direction;
- 	var x = sprite.x;
- 	var y = sprite.y;
+ function puntElem(id) {
+    //console.log("punt");
+    var style = window.getComputedStyle(sprite)
+    //console.log(sprite.className.split(/\s+/));
+    var dir = sprite.className.split(/\s+/)[0];
+    var x = style.left.substring(0,style.left.length-2);
+    x = parseInt(x);
+    var y = style.top.substring(0,style.top.length-2);
+    y = parseInt(y);
+
+    //console.log(x + "," + y);
+    var elemLoc = getPosition(all[id]);
+    //console.log(elemLoc);
+    var dist = distance(x,y,elemLoc);
+    //console.log("dist: " + dist);
+    //console.log("sprite: " + x + "," + y);
  	// if sprite is facing the object and within punting distance
- 	if ((dir=="down" && x<=id.right && x>=id.left && y-id.top<=delta && y-id.top>=0) ||
- 		(dir=="up" && x<=id.right && x>=id.left && id.bottom-y<=delta && id.bottom-y>=0) ||
- 		(dir=="right" && y<=id.top && y>=id.bottom && id.left-x<=delta && id.left-x>=0) ||
- 		(dir="left" && y<=id.top && y>=id.bottom && x-id.right<=delta && x-id.right>=0)) {
- 		punt(dir, id);
- 	}
+ 	/*if ((dir.startsWith("front") && x<=id.right && x>=id.left && y-id.top<=delta && y-id.top>=0) ||
+ 		(dir.startsWith("back") && x<=id.right && x>=id.left && id.bottom-y<=delta && id.bottom-y>=0) ||
+ 		(dir.startsWith("right") && y<=id.top && y>=id.bottom && id.left-x<=delta && id.left-x>=0) ||
+ 		(dir.startsWith("left") && y<=id.top && y>=id.bottom && x-id.right<=delta && x-id.right>=0)) {
+ 		console.log("collide");
+        deleteElem(all[id]);
+ 	}*/
+    if (dist < delta) {
+        deleteElem(all[id]);
+    }
  }
 
-findElements();
-console.log(Object.size(boundaries));
+/*
+ * Distance function between two elements.
+ */
+function distance(x,y,elemLoc){
+    var a = Math.abs(elemLoc.x-x);
+    var b = Math.abs(elemLoc.y-y);
+    return Math.sqrt(a+b);
+}
+
+/* 
+* Deletes the given element; that is, makes it the 
+* background color. 
+* @param element The given element. 
+*/ 
+ function deleteElem(element){
+    //console.log("delete");
+
+    var background_rgb = [255, 255, 255];
+
+    var c = $("body").css("background-color");
+    var colors = c.replace(/^rgba?\(|\s+|\)$/g,'').split(',');
+    background_rgb[0] = colors[0];
+    background_rgb[1] = colors[1];
+    background_rgb[2] = colors[2];
+
+    if(background_rgb[0] == background_rgb[1] == background_rgb[2] == 0){ // Handle if background not defined or black
+        background_rgb[0] = 255;
+        background_rgb[1] = 255;
+        background_rgb[2] = 255;
+    }
+
+    var backgroundWrite = "rgb(" + background_rgb[0] + ", " + background_rgb[1] + ", " + background_rgb[2] + ")";
+    element.style.color = backgroundWrite;
+}
+
+
+$(document).ready(function() {
+    blastWebpage();
+    
+    //console.log(all.length);
+    findElems();
+    //console.log(Object.size(boundaries));
+    setInterval(function(){
+        //console.log("update");
+      for (var i = 0; i < all.length; i++) {
+            puntElem(i);
+        }
+    }, 250);
+    
+});
+
 
