@@ -25,7 +25,7 @@ app.get('/createuser/:username', function(req, res) {
 			return
 		}
 	})
-	var new_user = new User({name: req.params.username, 'online': false, 'friends': []})
+	var new_user = new User({name: req.params.username, 'online': true, 'friends': []})
 	new_user.save(function(err) {
 		if (err) { console.log(err); return }
 		res.send('Success')
@@ -164,10 +164,15 @@ app.get('/getfriends/:username', function(req, res) {
 	})
 })
 
+var users = []
 io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
-  });
+ 	socket.on('login', function(msg) {
+ 		console.log(msg)
+ 		//users.push(msg)
+ 	})
+  	socket.on('chat message', function(msg){
+    	io.emit('chat message', msg);
+  	}); 
 });
 
 http.listen(3000, function(){
