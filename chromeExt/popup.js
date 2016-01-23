@@ -4,17 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   /* Update with your identity */
   /* Sign in if you're new etc. Look into local storage. */
-  StorageArea.get('username', function(name) {
-    if (name == null) {
-      alert('Name is null');
-    } else {
-      var newName = window.prompt('What is your name?', 'Joe Smith').toLowerCase();
-      StorageArea.set({'username' : newName}, function() {});
-    }
-  });
-
-  var username = StorageArea.get('username');
-  console.log('Current user: ' + username);
+  username = "evan"
 
   var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);
