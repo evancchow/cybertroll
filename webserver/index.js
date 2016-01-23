@@ -42,10 +42,10 @@ app.get('/addfriend/:username', function(req, res) {
 		}
 	})
 
-	new_user.save(function(err) {
+	/*new_user.save(function(err) {
 		if (err) { console.log(err); return }
 		res.send('Success')
-	})
+	})*/
 })
 
 io.on('connection', function(socket){
