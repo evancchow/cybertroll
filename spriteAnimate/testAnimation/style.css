@@ -1,11 +1,11 @@
-p {
-	
+body {
+    background-color: white;
 }
 #character {
 	  position: absolute;
 	  z-index:100;
-	  top: 0px;
-	  left: 0px;
+	  top: 10px;
+	  left: 10px;
 	  width: 32px;
 	  height: 48px;
 	  background: url('../../Images/Sprites/Sithjester Sprites/captainamerica_shield/captainamerica_shield_front-stand.png') no-repeat;
