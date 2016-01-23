@@ -9,39 +9,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Update with your identity */
   var username = "evan";
-  console.log("THIS WORKS ");
 
-  /* Update the friendlist w/online friends when the 
-  	extension is loaded. */
-  var start_url = 'http://192.241.182.93:3000/getfriends/' + username;
-  var friends = httpGet(start_url);
-  console.log(friends);
+  /* Get list of friends */
+  var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username);
   updateFriendList(friends);
-
-  // $('#friendlist').append('<li>Evan Chow</li>');
 });
 
 function httpGet(theUrl) {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return xmlHttp.responseText;
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+  xmlHttp.send( null );
+  return xmlHttp.responseText;
 };
 
 function updateFriendList(friends) {
 	var parsedFriends = JSON.parse(friends);
 	var numOnlineFriends = 0;
-	for (i = 0; i < parsedFriends.length; i++) {
-		var currName = parsedFriends[i]["name"];
-		console.log(currName);
-		if (parsedFriends[i]["online"] == true) {			
-			$('#friendlist').append('<li>' + currName)
-        .append('<input type="button" value="Troll" id=' +
-          '\"' + currName + '\"' +
-          ' />');
-      /*  */
-			numOnlineFriends += 1;
-		}
-	}
-	$('#numOnlineFriends').text(numOnlineFriends);
+
+  parsedFriends.forEach(function(friend) {
+      var currName = friend["name"];
+      if (friend["online"]) { 
+        $('#friendlist').append('<li>' + currName)
+          .append('<input type="button" value="Troll" id=' +
+            '\"' + 'friend_' + currName + '\"' +
+            ' />')
+          .append('</li>');
+
+        /* Update # of friends */
+        numOnlineFriends += 1;
+        $('#numOnlineFriends').text(numOnlineFriends);
+
+        /* Create listener for the button */
+        $('#friend_' + currName).click( function() {
+          friendTroll(currName);
+        });
+      }
+  });
+};
+
+function friendTroll(target) {
+  /* Send a signal to the server to troll a friend. */
+  alert("Trolling " + target);
 };
