@@ -43,4 +43,9 @@ div {
 .blast {
   display: inline;
   opacity: 1;
+  position: "absolute";
+}
+
+span#span_special {
+    color: white;
 }
