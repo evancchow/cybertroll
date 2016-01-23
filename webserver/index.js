@@ -184,7 +184,6 @@ app.get('/getfriends/:username', function(req, res) {
 		console.log(person.friends)
 		console.log(person.friends.length)
 		for (i = 0; i < person.friends.length; i++) {
-			console.log(i)
 			User.findOne({ 'name': person.friends[i] }, 'name online', function (err, p) {
 				friends_statuses.push(p)
 				if (friends_statuses.length == person.friends.length) {
