@@ -3,7 +3,9 @@
   "description": "Make the current page red",
   "version": "2.0",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "http://*/",
+    "http://192.241.182.93/*"
   ],
   "background": {
     "scripts": ["socket.io.js", "background.js"],

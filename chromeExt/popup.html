@@ -1,9 +1,4 @@
 <!doctype html>
-<!--
- This page is shown when the extension button is clicked, because the
- "browser_action" field in manifest.json contains the "default_popup" key with
- value "popup.html".
- -->
 <html>
   <head>
     <title>Getting Started Extension's Popup</title>
@@ -11,13 +6,16 @@
       body {
         font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
+        width: 800px;
+        height: 1200px;
       }
       #status {
         /* avoid an excessively wide status text */
         white-space: pre;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-width: 400px;
+        width: 800px;
+        height: 1200px;
       }
     </style>
 
@@ -27,11 +25,23 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
+    <script src="jquery-2.2.0.min.js"></script>
     <script src="socket.io.js"></script>
     <script src="popup.js"></script>
+    <script src="background.js"></script>
   </head>
   <body>
-    <input type="button" value="Troll!" id="trollbutton" />
+    <!-- Section to add friends etc. -->
+    <input type="button" value="Add Friend" id="addfriendbutton" />
+    <div> My Name Here </div>
+    <input type="button" value="Online" id="onlinebutton" /> <!-- to be toggled on/off w/JS -->
+
+    <hr>
+
+    Friends online right now: <span id="numOnlineFriends"></span>
+    <ul id="friendlist"></ul>
+
+    <input type="button" value="Troll everyone!" id="trollbutton" />
   </body>
 </html>
 
