@@ -7,6 +7,7 @@ var charSpeed = 400; //how fast the character will move
 $(document).ready(function() {
 	//add character state class
 	$('#character').addClass('front-stand');
+  console.log("added");
 });
 
 //KeyDown Function
