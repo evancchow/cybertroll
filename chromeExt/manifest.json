@@ -4,6 +4,7 @@
   "version": "2.0",
   "permissions": [
     "activeTab",
+    "storage",
     "http://*/",
     "http://192.241.182.93/*"
   ],

@@ -1,7 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
 
   /* Update with your identity */
-  var username = "evan";
+  /* Sign in if you're new etc. Look into local storage. */
+  StorageArea.get('username', function(name) {
+    if (name == null) {
+      alert('Name is null');
+    } else {
+      var newName = window.prompt('What is your name?', 'Joe Smith').toLowerCase();
+      StorageArea.set({'username' : newName}, function() {});
+    }
+  });
+
+  var username = StorageArea.get('username');
+  console.log('Current user: ' + username);
 
   /* Get list of friends */
   var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
@@ -15,6 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     trollEveryone(friends);
   });
 
+  /* Add friend button */
+  $('#addfriendbutton').click(function () {
+    var newFriend = window.prompt("Enter the name of your friend to add: ", "Albert Einstein");
+    addFriend(username, newFriend); // username here works
+  });
 });
 
 function httpGet(theUrl) {
@@ -61,4 +77,10 @@ function trollEveryone(friends) {
       friendTroll(friend["name"]);
     }
   });
+};
+
+function addFriend(name, friend) {
+  var response = httpGet('http://192.241.182.93:3000/addfriend/' + name +
+    '/' + friend);
+  alert(response);
 };
