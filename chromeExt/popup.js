@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   trollButton.addEventListener('click', function() {
     console.log("here")
     var socket = io.connect('http://192.241.182.93:3000/');
-    socket.emit('chat message', 'troll');
+    socket.emit('privmsg', {'to': 'eugene', 'msg':'hi'});
+    socket.emit('chat message', 'hi all')
   })
 })

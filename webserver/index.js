@@ -169,6 +169,7 @@ io.on('connection', function(socket){
  	socket.on('login', function(msg) {
  		console.log(msg);
  		users[msg.username] = socket.id;
+ 		//users.push(msg)
  	});
  	socket.on('privmsg', function(data) {
  		console.log(data.to);
