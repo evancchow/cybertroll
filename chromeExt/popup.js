@@ -4,16 +4,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
   /* Update with your identity */
   /* Sign in if you're new etc. Look into local storage. */
-  StorageArea.get('username', function(name) {
-    if (name == null) {
-      alert('Name is null');
+  chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
+    console.log(name); // for debugging
+    if (name.username == 'NULL_VALUE_NAME' || name.username == null || 
+        !name.username || name.username == undefined) {
+      var newName = window.prompt('Welcome to CyberTroll! What is your name?', 'Joe Smith').toLowerCase();
+      chrome.storage.sync.set({'username' : newName}, function() {
+        chrome.storage.sync.get('username', function(n) {
+          alert('Good to meet you, ' + n.username);
+          startup(n.username);
+        });
+      });
     } else {
-      var newName = window.prompt('What is your name?', 'Joe Smith').toLowerCase();
-      StorageArea.set({'username' : newName}, function() {});
+      chrome.storage.sync.get('username', function(n) {
+        alert('Welcome back, ' + n.username);
+        startup(n.username);
+      })
     }
   });
+});
 
-  var username = StorageArea.get('username');
+function startup(username) {
   console.log('Current user: ' + username);
 
   var numOnlineFriends = 0;
@@ -28,13 +39,13 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Online: " + msg);
     httpGet('http://192.241.182.93:3000/getfriends/' + 
     username, updateFriendList);
-  })
+  });
 
   socket.on("offline", function(msg) {
     console.log("Offline: " + msg);
     httpGet('http://192.241.182.93:3000/getfriends/' + 
     username, updateFriendList);
-  })
+  });
 
    /* Add friend button */
   $('#addfriendbutton').click(function () {
@@ -47,7 +58,15 @@ document.addEventListener("DOMContentLoaded", function() {
     httpGet('http://192.241.182.93:3000/getfriends/' + 
       username, trollEveryone);
   });
-});
+
+  /* Add button to logout user */
+  $('#userbutton').click(function() {
+    // Empty storage then restart extension
+    chrome.storage.sync.clear(function() {
+      window.location.href = "login.html";
+    });
+  });
+};
 
 function httpGet(theUrl, callback) {
   jQuery.get(theUrl, callback);
@@ -59,6 +78,7 @@ function updateFriendList(friends) {
   $('#numOnlineFriends').text(numOnlineFriends);
 
   parsedFriends.forEach(function(friend) {
+    if (friend) { // important b/c parsedFriends may have null values
       var currName = friend["name"];
       if (friend["online"]) { 
         $('#friendlist').append('<li>' + currName)
@@ -76,6 +96,7 @@ function updateFriendList(friends) {
           friendTroll(currName);
         });
       }
+    }
   });
 };
 
