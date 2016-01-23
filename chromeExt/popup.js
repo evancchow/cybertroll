@@ -1,11 +1,6 @@
-document.addEventListener('DOMContentLoaded', function() {
-  var trollButton = document.getElementById('trollbutton');
-  trollButton.addEventListener('click', function() {
-    var socket = io.connect('http://192.241.182.93:3000/');
-    var username = "eugene"
-    socket.emit('privmsg', {'to': username, 'msg':'hi'});
-    socket.emit('chat message', 'hi all')
-  });
+document.addEventListener("DOMContentLoaded", function() {
+  socket = io.connect('http://192.241.182.93:3000/');
+  console.log("connected")
 
   /* Update with your identity */
   var username = "evan";
@@ -14,7 +9,22 @@ document.addEventListener('DOMContentLoaded', function() {
   var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
     username);
   updateFriendList(friends);
-});
+
+  /* update if going online / offline */
+  socket.on('online', function(msg) {
+    alert('Online: ' + msg)
+    var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username);
+    updateFriendList(friends);
+  })
+
+  socket.on('offline', function(msg) {
+    alert('Offline: ' + msg)
+    var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username);
+    updateFriendList(friends);
+  })
+})
 
 function httpGet(theUrl) {
   var xmlHttp = new XMLHttpRequest();
@@ -51,4 +61,5 @@ function updateFriendList(friends) {
 function friendTroll(target) {
   /* Send a signal to the server to troll a friend. */
   alert("Trolling " + target);
+  socket.emit('privmsg', {'to': target, 'msg':'troll'});
 };

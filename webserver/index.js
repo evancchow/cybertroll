@@ -6,11 +6,34 @@ mongoose.connect("mongodb://user:password@ds037215.mongolab.com:37215/cybertroll
 
 var Schema = mongoose.Schema;
 var UserSchema = new Schema({
-  name: { type: String, required: true, dropDups: true },
-  online: { type: Boolean, required: true },
-  friends: [{ type: String, dropDups: true }]
+	name: { type: String, required: true },
+	email: { type: String, required: true, dropDups: true },
+	online: { type: Boolean, required: true },
+	friends: [{ type: String, dropDups: true }]
 });
 var User = mongoose.model('User', UserSchema);
+
+
+var users = {}
+io.on('connection', function(socket){
+ 	socket.on('login', function(msg) {
+ 		console.log(msg);
+ 		users[msg.username] = socket.id;
+ 	});
+ 	socket.on('privmsg', function(data) {
+ 		console.log(data.to)
+ 		var socketid = users[data.to];
+        if (socketid === undefined || socketid === null) {
+            console.log('No socket id for ' + data.to)
+            return
+		}	
+        console.log(socketid + ' ' + data.msg);
+		io.to(socketid).emit('privmsg', data.msg);
+	});
+	socket.on('chat message', function(msg){
+        io.emit('chat message', msg);
+	});
+});
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -55,7 +78,7 @@ app.get('/addfriend/:user1/:user2', function(req, res) {
 			if (person1.friends.indexOf(user2) >= 0) {
 				res.send('Already friends')
 				return
-			}s
+			}
 			person1.friends.push(user2)		
 			person2.friends.push(user1)
 			person1.save(function(err) {
@@ -114,7 +137,7 @@ app.get('/removefriend/:user1/:user2', function(req, res) {
 
 // go online
 app.get('/goonline/:username', function(req, res) {
-	User.findOne({ 'name': req.params.username }, 'name online', function (err, person) {
+	User.findOne({ 'name': req.params.username }, 'name friends online', function (err, person) {
 		if (person === null) {
 			res.send('User ' + req.params.username + ' does not exist')
 			return
@@ -123,6 +146,10 @@ app.get('/goonline/:username', function(req, res) {
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
+		for (i = 0; i < person.friends.length; i++) {
+			var socketid = users[person.friends[i]]
+			io.to(socketid).emit('online', username);
+		}
 		res.send("Success")
 	})
 })
@@ -138,6 +165,10 @@ app.get('/gooffline/:username', function(req, res) {
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
+		for (i = 0; i < person.friends.length; i++) {
+			var socketid = users[person.friends[i]]
+			io.to(socketid).emit('offline', username);
+		}
 		res.send("Success")
 	})
 })
@@ -163,23 +194,6 @@ app.get('/getfriends/:username', function(req, res) {
 		}
 	})
 })
-
-var users = {}
-io.on('connection', function(socket){
- 	socket.on('login', function(msg) {
- 		console.log(msg);
- 		users[msg.username] = socket.id;
- 		//users.push(msg)
- 	});
- 	socket.on('privmsg', function(data) {
- 		console.log(data.to);
- 		var to = users[data.to];
- 		io.sockets.socket(to).emit(data.msg);
- 	});
-  	socket.on('chat message', function(msg){
-    	io.emit('chat message', msg);
-  	}); 
-});
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
