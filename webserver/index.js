@@ -164,12 +164,17 @@ app.get('/getfriends/:username', function(req, res) {
 	})
 })
 
-var users = []
+var users = {}
 io.on('connection', function(socket){
  	socket.on('login', function(msg) {
- 		console.log(msg)
- 		//users.push(msg)
- 	})
+ 		console.log(msg);
+ 		users[msg.username] = socket.id;
+ 	});
+ 	socket.on('privmsg', function(data) {
+ 		console.log(data.to);
+ 		var to = users[data.to];
+ 		io.sockets.socket(to).emit(data.msg);
+ 	});
   	socket.on('chat message', function(msg){
     	io.emit('chat message', msg);
   	}); 
