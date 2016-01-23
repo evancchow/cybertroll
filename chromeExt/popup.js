@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
   socket = io.connect('http://192.241.182.93:3000/');
-  console.log("connected")
+  console.log("connected");
 
   /* Update with your identity */
   var username = "evan";
 
   /* Get list of friends */
-  var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username);
   updateFriendList();
 
   /* update if going online / offline */
@@ -77,4 +75,4 @@ function trollEveryone() {
       friendTroll(friend["name"]);
     }
   })
-}
+};
