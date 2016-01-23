@@ -10,10 +10,13 @@ document.addEventListener('DOMContentLoaded', function() {
   /* Update with your identity */
   var username = "evan";
 
+  /*** Stuff to do at the beginning ***/
+
   /* Get list of friends */
-  var friends = httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username);
-  updateFriendList(friends);
+  updateFriendList(); // no return method
+
+  /* Add listener for button to troll everyone */
+  $('#troll_everyone').click(trollEveryone());
 });
 
 function httpGet(theUrl) {
@@ -24,7 +27,8 @@ function httpGet(theUrl) {
 };
 
 function updateFriendList(friends) {
-	var parsedFriends = JSON.parse(friends);
+  var parsedFriends = JSON.parse(httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username));
 	var numOnlineFriends = 0;
 
   parsedFriends.forEach(function(friend) {
@@ -52,3 +56,14 @@ function friendTroll(target) {
   /* Send a signal to the server to troll a friend. */
   alert("Trolling " + target);
 };
+
+function trollEveryone() {
+  /* get friends */
+  var parsedFriends = JSON.parse(httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username));
+  parsedFriends.forEach(function(friend) {
+    if (friend["online"]) {
+      friendTroll(friend["name"]);
+    }
+  })
+}
