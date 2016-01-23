@@ -13,6 +13,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   console.log(socket)
   var socket = io.connect('http://192.241.182.93:3000/');
   socket.emit('chat message', 'Hi from a Chrome Extension!');
+  socket.on('chat message', function(msg){
+    console.log(msg);
+  });
 });
 
 

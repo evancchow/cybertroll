@@ -6,7 +6,7 @@ mongoose.connect("mongodb://user:password@ds037215.mongolab.com:37215/cybertroll
 
 var Schema = mongoose.Schema;
 var UserSchema = new Schema({
-  name: { type: String, unique: true },
+  name: { type: String, required: true, dropDups: true },
 });
 var User = mongoose.model('User', UserSchema);
 
@@ -14,13 +14,12 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/createuser', function(req, res) {
-	var new_user = new User({name: req.param.username})
+app.get('/createuser/:username', function(req, res) {
+	var new_user = new User({name: req.params.username})
+	new_user.findOne({ 'name': req.params.username })
 	new_user.save(function(err) {
-		if (err) return handleError(err)
-		else {
-			res.send('Success')
-		}
+		if (err) { console.log(err); return }
+		res.send('Success')
 	})
 })
 
