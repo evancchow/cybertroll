@@ -21,15 +21,26 @@ chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
       })
     })
 
-    $(window).bind('beforeunload', function() {
-        httpGet('http://192.241.182.93:3000/gooffline/' + 
-        username, function(res) {
-        console.log(res)
-        if (res == "Success") {
-          socket.emit("offline", username)
-        }
-      })
-    }); 
+    chrome.tabs.getAllInWindow( null, function( tabs ){
+        console.log("Initial tab count: " + tabs.length);
+        num_tabs = tabs.length;
+    });
+    chrome.tabs.onCreated.addListener(function(tab){
+        num_tabs++;
+        console.log("Tab created event caught. Open tabs #: " + num_tabs);
+    });
+    chrome.tabs.onRemoved.addListener(function(tabId){
+        num_tabs--;
+        console.log("Tab removed event caught. Open tabs #: " + num_tabs);
+        if( num_tabs == 0 )
+          httpGet('http://192.241.182.93:3000/gooffline/' + 
+          username, function(res) {
+          console.log(res)
+          if (res == "Success") {
+            socket.emit("offline", username)
+          }
+        })
+    });
   }
 });
 
