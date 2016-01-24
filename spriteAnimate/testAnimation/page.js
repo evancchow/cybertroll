@@ -3,7 +3,7 @@ var currentKey;          //records the current key pressed
 var TimerWalk;          //timer handle
 var limit = 7;        // max number of steps to take in a direction
 var charStep = 2;       //1=1st foot, 2=stand, 3=2nd foot, 4=stand
-var charSpeed = 750; //how fast the character will move
+var charSpeed = 650; //how fast the character will move
 var prevStep = 'down';
 var hitBounds = false;
 
@@ -55,7 +55,7 @@ $(document).ready(function() {
       charWalk(adj2(prevStep));
       prevStep = adj2(prevStep);
     }
-  }, 750);
+  }, 650);
 });
 /*
 //KeyDown Function
