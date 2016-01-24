@@ -130,7 +130,6 @@ function distance(x,y,elemLoc){
 * @param element The given element. 
 */ 
  function deleteElem(element){
-    //console.log("delete");
 
     var background_rgb = [255, 255, 255];
 
