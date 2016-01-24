@@ -20,8 +20,19 @@ chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
         alert('Public message: ' + msg)
       })
     })
+
+    $(window).bind('beforeunload', function() {
+        httpGet('http://192.241.182.93:3000/gooffline/' + 
+        username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("offline", username)
+        }
+      })
+    }); 
   }
 });
+
 
 
 

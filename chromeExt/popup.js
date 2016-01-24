@@ -101,6 +101,13 @@ function startup(username) {
   $('#userbutton').click(function() {
     // Empty storage then restart extension
     chrome.storage.sync.clear(function() {
+      httpGet('http://192.241.182.93:3000/gooffline/' + 
+      username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("offline", username)
+        }
+      })
       window.location.href = "login.html";
     });
   });
