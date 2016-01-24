@@ -5,27 +5,65 @@ document.addEventListener("DOMContentLoaded", function() {
   /* Update with your identity */
   /* Sign in if you're new etc. Look into local storage. */
   chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
-    console.log(name); // for debugging
-    if (name.username == 'NULL_VALUE_NAME' || name.username == null || 
-        !name.username || name.username == undefined) {
-      var newName = window.prompt('Welcome to CyberTroll! What is your name?', 'Joe Smith').toLowerCase();
-      chrome.storage.sync.set({'username' : newName}, function() {
-        chrome.storage.sync.get('username', function(n) {
-          alert('Good to meet you, ' + n.username);
-          startup(n.username);
-        });
-      });
-    } else {
-      chrome.storage.sync.get('username', function(n) {
-        alert('Welcome back, ' + n.username);
-        startup(n.username);
-      })
-    }
+    // console.log(name); // for debugging
+    // if (name.username == 'NULL_VALUE_NAME' || name.username == null || 
+    //     !name.username || name.username == undefined) {
+    //   //var newName = window.prompt('Welcome to CyberTroll! What is your name?', 'Joe Smith').toLowerCase();
+    //   chrome.storage.sync.set({'username' : newName}, function() {
+    //     chrome.storage.sync.get('username', function(n) {
+    //       alert('Good to meet you, ' + n.username);
+    //       startup(n.username);
+    //     });
+    //   });
+    // } else {
+    //   chrome.storage.sync.get('username', function(n) {
+    //     alert('Welcome back, ' + n.username);
+    //     startup(n.username);
+    //   })
+    // }
+    username = "evan"
+    startup("evan")
   });
 });
 
+function update_toggle() {
+  console.log($('#onlinetoggle').prop('checked'))
+  if ($('#onlinetoggle').prop('checked')) {
+      $(".switch-button-label:contains('available')").css('color', 'green')
+      $(".switch-button-label:contains('busy')").css('color', '#adadad')
+      httpGet('http://192.241.182.93:3000/goonline/' + 
+      username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("online", username)
+        }
+      })
+  } else {
+      $(".switch-button-label:contains('busy')").css('color', 'red')
+      $(".switch-button-label:contains('available')").css('color', '#adadad')
+      httpGet('http://192.241.182.93:3000/gooffline/' + 
+      username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("offline", username)
+        }
+      })
+  }
+}
+
 function startup(username) {
   console.log('Current user: ' + username);
+
+  $("#onlinetoggle").switchButton({
+    on_label: 'available',
+    off_label: 'busy'
+  });
+
+  $(".switch-button-label:contains('available')").css('color', 'green')
+  $(".switch-button-label:contains('busy')").css('color', '#adadad')
+  $("#onlinetoggle").change(function(e) {
+    update_toggle()
+  })
 
   var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);
