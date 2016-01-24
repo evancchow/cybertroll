@@ -46,6 +46,14 @@ function update_toggle() {
 function startup(username) {
   $('#current_user').text(username.toUpperCase()); // update your name in the externsion
 
+  httpGet('http://192.241.182.93:3000/goonline/' + 
+    username, function(res) {
+      console.log(res)
+      if (res == "Success") {
+        socket.emit("online", username)
+      }
+    })
+  
   $("#onlinetoggle").switchButton({
     on_label: 'available',
     off_label: 'busy'
@@ -106,16 +114,15 @@ function updateFriendList(friends) {
   var parsedFriends = friends
 	var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);
+  $('#friendlist li').remove()
 
   parsedFriends.forEach(function(friend) {
     if (friend) { // important b/c parsedFriends may have null values
       var currName = friend["name"];
       if (friend["online"]) { 
-        $('#friendlist').append('<li>' + currName)
-          .append('<input type="button" value="Troll" id=' +
+        $('#friendlist').append('<li>' + currName + '<input type="button" value="Troll" id=' +
             '\"' + 'friend_' + currName + '\"' +
-            ' />')
-          .append('</li>');
+            ' />' + '</li>');
 
         /* Update # of friends */
         numOnlineFriends += 1;
@@ -150,6 +157,8 @@ function trollEveryone(friends) {
 function addFriend(name, friend) {
   httpGet('http://192.241.182.93:3000/addfriend/' + name +
     '/' + friend, function(res) { 
-      alert(res) 
+      httpGet('http://192.241.182.93:3000/getfriends/' + 
+      username, updateFriendList);
+      alert(res)
     });
 };

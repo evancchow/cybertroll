@@ -143,11 +143,13 @@ app.get('/goonline/:username', function(req, res) {
 			return
 		}
 		person.online = true
+		console.log(person.name + " online")
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
 		person.friends.forEach(function(friend) {
 			var socketid = users[friend]
+			console.log(friend + ' ' + socketid)
 			io.to(socketid).emit('online', friend);
 		})
 		res.send("Success")
@@ -162,11 +164,13 @@ app.get('/gooffline/:username', function(req, res) {
 			return
 		}
 		person.online = false
+		console.log(person.name + " offline")
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
 		person.friends.forEach(function(friend) {
 			var socketid = users[friend]
+			console.log(friend + ' ' + socketid)
 			io.to(socketid).emit('offline', friend);
 		})
 		res.send("Success")
