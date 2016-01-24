@@ -85,7 +85,7 @@ function startup(username) {
 
    /* Add friend button */
   $('#addfriendbutton').click(function () {
-    var newFriend = window.prompt("Enter the name of your friend to add: ", "Albert Einstein");
+    var newFriend = $('#add_friend_input').val().toLowerCase();
     addFriend(username, newFriend); // username here works
   });
 
@@ -102,6 +102,7 @@ function startup(username) {
       window.location.href = "login.html";
     });
   });
+
 };
 
 function httpGet(theUrl, callback) {
