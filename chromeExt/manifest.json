@@ -9,7 +9,7 @@
     "http://192.241.182.93/*"
   ],
   "background": {
-    "scripts": ["socket.io.js", "background.js"],
+    "scripts": ["jquery-2.2.0.min.js", "socket.io.js", "background.js"],
     "persistent": true
   },
   "browser_action": {

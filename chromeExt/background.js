@@ -1,3 +1,7 @@
+function httpGet(theUrl, callback) {
+  jQuery.get(theUrl, callback);
+};
+
 var socket = io.connect('http://192.241.182.93:3000/');
 console.log("connected")
 chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
@@ -43,7 +47,4 @@ chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
     });
   }
 });
-
-
-
 
