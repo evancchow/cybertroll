@@ -5,24 +5,16 @@ document.addEventListener("DOMContentLoaded", function() {
   /* Update with your identity */
   /* Sign in if you're new etc. Look into local storage. */
   chrome.storage.sync.get({'username' : 'NULL_VALUE_NAME'}, function(name) {
-    // console.log(name); // for debugging
-    // if (name.username == 'NULL_VALUE_NAME' || name.username == null || 
-    //     !name.username || name.username == undefined) {
-    //   //var newName = window.prompt('Welcome to CyberTroll! What is your name?', 'Joe Smith').toLowerCase();
-    //   chrome.storage.sync.set({'username' : newName}, function() {
-    //     chrome.storage.sync.get('username', function(n) {
-    //       alert('Good to meet you, ' + n.username);
-    //       startup(n.username);
-    //     });
-    //   });
-    // } else {
-    //   chrome.storage.sync.get('username', function(n) {
-    //     alert('Welcome back, ' + n.username);
-    //     startup(n.username);
-    //   })
-    // }
-    username = "evan"
-    startup("evan")
+    console.log(name); // for debugging
+    if (name.username == 'NULL_VALUE_NAME' || name.username == null || 
+        !name.username || name.username == undefined) {
+      window.location.href = "login.html";
+    } else {
+      chrome.storage.sync.get('username', function(n) {
+        username = n.username
+        startup(n.username);
+      })
+    }
   });
 });
 
@@ -52,7 +44,7 @@ function update_toggle() {
 }
 
 function startup(username) {
-  console.log('Current user: ' + username);
+  $('#current_user').text(username.toUpperCase()); // update your name in the externsion
 
   $("#onlinetoggle").switchButton({
     on_label: 'available',
@@ -64,7 +56,7 @@ function startup(username) {
   $("#onlinetoggle").change(function(e) {
     update_toggle()
   })
-
+  
   var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);
   
@@ -140,7 +132,8 @@ function updateFriendList(friends) {
 
 function friendTroll(target) {
   /* Send a signal to the server to troll a friend. */
-  alert("Trolling" + target);
+  // alert("Trolling" + target);
+  /* here: maybe update profile picture or icon next to friend? */
   socket.emit("privmsg", {"to": target, "msg": "troll"});
 };
 
