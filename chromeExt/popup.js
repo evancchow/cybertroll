@@ -11,14 +11,51 @@ document.addEventListener("DOMContentLoaded", function() {
       window.location.href = "login.html";
     } else {
       chrome.storage.sync.get('username', function(n) {
+        username = n.username
         startup(n.username);
       })
     }
   });
 });
 
+function update_toggle() {
+  console.log($('#onlinetoggle').prop('checked'))
+  if ($('#onlinetoggle').prop('checked')) {
+      $(".switch-button-label:contains('available')").css('color', 'green')
+      $(".switch-button-label:contains('busy')").css('color', '#adadad')
+      httpGet('http://192.241.182.93:3000/goonline/' + 
+      username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("online", username)
+        }
+      })
+  } else {
+      $(".switch-button-label:contains('busy')").css('color', 'red')
+      $(".switch-button-label:contains('available')").css('color', '#adadad')
+      httpGet('http://192.241.182.93:3000/gooffline/' + 
+      username, function(res) {
+        console.log(res)
+        if (res == "Success") {
+          socket.emit("offline", username)
+        }
+      })
+  }
+}
+
 function startup(username) {
   $('#current_user').text(username.toUpperCase()); // update your name in the externsion
+
+  $("#onlinetoggle").switchButton({
+    on_label: 'available',
+    off_label: 'busy'
+  });
+
+  $(".switch-button-label:contains('available')").css('color', 'green')
+  $(".switch-button-label:contains('busy')").css('color', '#adadad')
+  $("#onlinetoggle").change(function(e) {
+    update_toggle()
+  })
   
   var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);

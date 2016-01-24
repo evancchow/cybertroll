@@ -146,17 +146,17 @@ app.get('/goonline/:username', function(req, res) {
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
-		for (i = 0; i < person.friends.length; i++) {
-			var socketid = users[person.friends[i]]
-			io.to(socketid).emit('online', username);
-		}
+		person.friends.forEach(function(friend) {
+			var socketid = users[friend]
+			io.to(socketid).emit('online', friend);
+		})
 		res.send("Success")
 	})
 })
 
 // go offline
 app.get('/gooffline/:username', function(req, res) {
-	User.findOne({ 'name': req.params.username }, 'name online', function (err, person) {
+	User.findOne({ 'name': req.params.username }, 'name friends online', function (err, person) {
 		if (person === null) {
 			res.send('User ' + req.params.username + ' does not exist')
 			return
@@ -165,10 +165,10 @@ app.get('/gooffline/:username', function(req, res) {
 		person.save(function(err) {
 			if (err) { console.log(err); return }
 		})
-		for (i = 0; i < person.friends.length; i++) {
-			var socketid = users[person.friends[i]]
-			io.to(socketid).emit('offline', username);
-		}
+		person.friends.forEach(function(friend) {
+			var socketid = users[friend]
+			io.to(socketid).emit('offline', friend);
+		})
 		res.send("Success")
 	})
 })
