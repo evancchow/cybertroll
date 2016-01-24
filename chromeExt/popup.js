@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       chrome.storage.sync.get('username', function(n) {
         username = n.username
-        socket.emit('login', {'username': username})
         startup(n.username);
       })
     }

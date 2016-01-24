@@ -21,14 +21,8 @@ io.on('connection', function(socket){
  		users[msg.username] = socket.id;
  	});
  	socket.on('privmsg', function(data) {
- 		console.log(data.to)
- 		var socketid = users[data.to];
-        if (socketid === undefined || socketid === null) {
-            console.log('No socket id for ' + data.to)
-            return
-		}	
-        console.log(socketid + ' ' + data.msg);
-		io.to(socketid).emit('privmsg', data.msg);
+ 		console.log(data.to + ' ' + data.msg)
+		io.emit(data.to, data.msg);
 	});
 	socket.on('chat message', function(msg){
         io.emit('chat message', msg);
