@@ -20,8 +20,12 @@
 
 // blastWebpage_Words_Divs(globalPositionAll);
 
-blastWebpage_Chars_Divs(globalPositionAll);
+// blastWebpage_Chars_Divs(globalPositionAll);
 // deleteEveryOtherChar();
+
+function blastWebpage(){ // choose which mode you want
+  blastWebpage_Chars_Divs(globalPositionAll);
+}
 
 
 
@@ -105,7 +109,7 @@ function globalPositionAll(x, divPositions){
 
     if(testdiv.childElementCount > 0){
       var children = testdiv.children;
-      testdiv.remove(); // Can improve this later. Removes troublesome chars
+      deleteElem(testdiv); // Can improve this later. Removes troublesome chars
     }
         // DUPLICATE DETECTION
     // for(var j = x.length-1; j > i; j--){
@@ -145,7 +149,7 @@ function deleteEveryOtherChar(){
 }
 
 
-function deleteDivElem(element){
+function deleteElem(element){
   element.remove();
 }
 
