@@ -1,6 +1,14 @@
 body {
     background-color: white;
 }
+#logo {
+	position: absolute;
+	top: 500px;
+	left: 100px;
+/*	width: 32px;
+	height: 48px;*/
+	background: url('../../Images/CaptainAmerica.png') no-repeat;
+}
 #character {
 	  position: absolute;
 	  z-index:100;
