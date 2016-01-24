@@ -66,13 +66,13 @@ function startup(username) {
     update_toggle()
   })
   
-  socket.on("online", function(msg) {
+  socket.on("online" + username, function(msg) {
     console.log(msg + "online")
     httpGet('http://192.241.182.93:3000/getfriends/' + 
     username, updateFriendList);
   })
 
-  socket.on("offline", function(msg) {
+  socket.on("offline" + username, function(msg) {
     console.log(msg + "offline")
     httpGet('http://192.241.182.93:3000/getfriends/' + 
     username, updateFriendList);

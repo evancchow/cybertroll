@@ -142,9 +142,7 @@ app.get('/goonline/:username', function(req, res) {
 			if (err) { console.log(err); return }
 		})
 		person.friends.forEach(function(friend) {
-			var socketid = users[friend]
-			console.log(friend + ' ' + socketid)
-			io.to(socketid).emit('online', friend);
+			io.emit('online' + friend, friend);
 		})
 		res.send("Success")
 	})
@@ -163,9 +161,7 @@ app.get('/gooffline/:username', function(req, res) {
 			if (err) { console.log(err); return }
 		})
 		person.friends.forEach(function(friend) {
-			var socketid = users[friend]
-			console.log(friend + ' ' + socketid)
-			io.to(socketid).emit('offline', friend);
+			io.emit('offline' + friend, friend);
 		})
 		res.send("Success")
 	})
