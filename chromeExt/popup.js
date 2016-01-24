@@ -43,6 +43,9 @@ function update_toggle() {
 
 function startup(username) {
   $('#current_user').text(username.toUpperCase()); // update your name in the externsion
+  
+  socket = io.connect('http://192.241.182.93:3000/');
+  console.log("connected")
 
   httpGet('http://192.241.182.93:3000/goonline/' + 
     username, function(res) {
@@ -139,6 +142,7 @@ function friendTroll(target) {
   /* Send a signal to the server to troll a friend. */
   // alert("Trolling" + target);
   /* here: maybe update profile picture or icon next to friend? */
+  console.log("trolling " + target)
   socket.emit("privmsg", {"to": target, "msg": "troll"});
 };
 
