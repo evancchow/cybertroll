@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-  socket = io.connect('http://192.241.182.93:3000/');
-  console.log("connected");
 
   /* Update with your identity */
   /* Sign in if you're new etc. Look into local storage. */
@@ -12,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
       chrome.storage.sync.get('username', function(n) {
         username = n.username
+        socket.emit('login', {'username': username})
         startup(n.username);
       })
     }
@@ -53,7 +52,7 @@ function startup(username) {
         socket.emit("online", username)
       }
     })
-  
+
   $("#onlinetoggle").switchButton({
     on_label: 'available',
     off_label: 'busy'
@@ -65,25 +64,24 @@ function startup(username) {
     update_toggle()
   })
   
+  socket.on("online", function(msg) {
+    console.log(msg + "online")
+    httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username, updateFriendList);
+  })
+
+  socket.on("offline", function(msg) {
+    console.log(msg + "offline")
+    httpGet('http://192.241.182.93:3000/getfriends/' + 
+    username, updateFriendList);
+  })
+
   var numOnlineFriends = 0;
   $('#numOnlineFriends').text(numOnlineFriends);
   
   /* Get list of friends */
   httpGet('http://192.241.182.93:3000/getfriends/' + 
     username, updateFriendList);
-
-  /* update when online / offline */
-  socket.on("online", function(msg) {
-    console.log("Online: " + msg);
-    httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username, updateFriendList);
-  });
-
-  socket.on("offline", function(msg) {
-    console.log("Offline: " + msg);
-    httpGet('http://192.241.182.93:3000/getfriends/' + 
-    username, updateFriendList);
-  });
 
    /* Add friend button */
   $('#addfriendbutton').click(function () {

@@ -17,7 +17,7 @@ var User = mongoose.model('User', UserSchema);
 var users = {}
 io.on('connection', function(socket){
  	socket.on('login', function(msg) {
- 		console.log(msg);
+ 		console.log("login: " + msg.username);
  		users[msg.username] = socket.id;
  	});
  	socket.on('privmsg', function(data) {
